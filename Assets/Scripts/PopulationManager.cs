@@ -31,10 +31,17 @@ public class PopulationManager : MonoBehaviour
     public int Generation => generation;
     public float MeanLuminance => population.Count == 0 ? 0f : population.Average(d => d.Genome.Luminance);
     public EvolutionSettings Settings => settings;
+    public void SetAutomaticHunter(bool on) => automaticHunter = on;
 
     private void Start()
     {
         if (sceneCamera == null) sceneCamera = Camera.main;
+        if (personPrefab == null)
+        {
+            Debug.LogError("PopulationManager: assign the Person prefab in the Inspector.", this);
+            enabled = false;
+            return;
+        }
         if (useFixedSeed) Random.InitState(fixedSeed);
 
         for (int i = 0; i < settings.populationSize; i++)
@@ -129,7 +136,7 @@ public class PopulationManager : MonoBehaviour
         string hunter = automaticHunter ? $"Otomatik avcı ({settings.hunterRule})" : "Avcı: sen (sol tık)";
         string recent = string.Join("  ", meanLuminanceHistory.Skip(Mathf.Max(0, meanLuminanceHistory.Count - 8))
             .Select(v => v.ToString("0.00")));
-        GUI.Box(new Rect(10, 10, 430, 104),
+        GUI.Box(new Rect(10, 10, 600, 104),
             $"Nesil: {generation}    Süre: {elapsed:0.0} / {settings.trialTime:0} s\n" +
             $"Canlı: {population.Count(d => !d.IsDead)} / {population.Count}    Ortalama parlaklık L: {MeanLuminance:0.000}\n" +
             $"{hunter}    Mutasyon: {settings.mutationRate:0.00}\n" +

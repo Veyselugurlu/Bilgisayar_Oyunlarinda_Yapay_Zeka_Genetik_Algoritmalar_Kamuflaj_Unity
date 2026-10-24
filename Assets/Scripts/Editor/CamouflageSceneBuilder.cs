@@ -33,6 +33,26 @@ public static class CamouflageSceneBuilder
         EditorApplication.Exit(0);
     }
 
+    [MenuItem("Genetik Algoritma/3. Windows Build Al")]
+    public static void BuildPlayer()
+    {
+        var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+        {
+            scenes = new[] { ScenePath },
+            locationPathName = "Builds/GA-Kamuflaj/GA-Kamuflaj.exe",
+            target = BuildTarget.StandaloneWindows64,
+            options = BuildOptions.None
+        });
+        Debug.Log("GA_BUILD_RESULT " + report.summary.result);
+    }
+
+    public static void BuildSceneAndPlayerBatch()
+    {
+        Build();
+        BuildPlayer();
+        EditorApplication.Exit(0);
+    }
+
     private static Sprite ImportCircleSprite()
     {
         Directory.CreateDirectory("Assets/Sprites");
@@ -67,14 +87,20 @@ public static class CamouflageSceneBuilder
         go.AddComponent<CircleCollider2D>();
         go.AddComponent<DNA>();
 
-        DNA prefab = PrefabUtility.SaveAsPrefabAsset(go, PrefabPath).GetComponent<DNA>();
+        PrefabUtility.SaveAsPrefabAsset(go, PrefabPath);
         Object.DestroyImmediate(go);
+        AssetDatabase.ImportAsset(PrefabPath, ImportAssetOptions.ForceUpdate);
+        // Reference the asset loaded from disk; the object returned by SaveAsPrefabAsset may not serialize as a reference.
+        DNA prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath).GetComponent<DNA>();
+        if (prefab == null) throw new System.InvalidOperationException("Person prefab has no DNA component: " + PrefabPath);
         return prefab;
     }
 
     private static void CreateScene(DNA prefab)
     {
         var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+        // NewScene unloads unused assets, so the prefab must be (re)loaded after it
+        prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath).GetComponent<DNA>();
 
         var cameraGo = new GameObject("Main Camera") { tag = "MainCamera" };
         var camera = cameraGo.AddComponent<Camera>();
@@ -90,6 +116,9 @@ public static class CamouflageSceneBuilder
         so.FindProperty("personPrefab").objectReferenceValue = prefab;
         so.FindProperty("sceneCamera").objectReferenceValue = camera;
         so.ApplyModifiedPropertiesWithoutUndo();
+        if (so.FindProperty("personPrefab").objectReferenceValue == null)
+            throw new System.InvalidOperationException("PopulationManager.personPrefab could not be assigned");
+        managerGo.AddComponent<DemoRecorder>(); // inactive unless the build is started with demo arguments
 
         Directory.CreateDirectory("Assets/Scenes");
         EditorSceneManager.SaveScene(scene, ScenePath);
