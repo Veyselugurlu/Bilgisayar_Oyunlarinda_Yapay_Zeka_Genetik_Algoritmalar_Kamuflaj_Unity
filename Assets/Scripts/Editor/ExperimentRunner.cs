@@ -77,8 +77,10 @@ public static class ExperimentRunner
 
     public static void RunBatch()
     {
-        RunAll();
-        EditorApplication.Exit(0);
+        int code = 0;
+        try { RunAll(); }
+        catch (System.Exception e) { Debug.LogException(e); code = 1; }
+        EditorApplication.Exit(code); // never leave a batch-mode editor running
     }
 
     private static string Row(Condition c, int seed, int gen, List<Genome> pop)
