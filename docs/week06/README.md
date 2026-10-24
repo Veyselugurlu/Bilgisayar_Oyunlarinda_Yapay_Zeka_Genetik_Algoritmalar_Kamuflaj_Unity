@@ -14,9 +14,9 @@ Ekranda renkli daireler (bireyler) var. Bir avcı, ister fareyle oynayan kişi i
 
 | Ne | Sonuç |
 |---|---|
-| Sunudaki 9 etkinlik | Hepsi uygulandı (tablo: bölüm 4) |
-| Kontrollü deney (slayt 35) | Parlak avcı: L 0.486 → 0.113. Mat avcı: L 0.486 → 0.913 (40 nesil, 10 seed) |
-| Kontroller (slayt 36) | Rastgele avcı ve seçimsiz koşulda yönlü değişim yok (L ≈ 0.47) |
+| 9 etkinlik | Hepsi uygulandı (tablo: bölüm 4) |
+| Kontrollü deney | Parlak avcı: L 0.486 → 0.113. Mat avcı: L 0.486 → 0.913 (40 nesil, 10 seed) |
+| Kontrol koşulları | Rastgele avcı ve seçimsiz koşulda yönlü değişim yok (L ≈ 0.47) |
 | Ev ödevi: mutasyon oranları | 0 → popülasyon tek renge kilitleniyor; 0.10 → en koyu sonuç (L 0.057); 0.50 → seçilim zayıflıyor (L 0.346) |
 | Challenge: boyut geni | Avcı yalnızca renge bakarken boyut yönsüz (s 0.96 ± 0.29); büyükler daha görünür olunca bireyler küçülüyor (s 0.63) |
 
@@ -34,7 +34,7 @@ Ekranda renkli daireler (bireyler) var. Bir avcı, ister fareyle oynayan kişi i
 | Nesil | 10 saniyelik bir tur; sonunda eski bireyler silinir, 10 çocuk doğar |
 | Parlaklık L | `L = 0.2126r + 0.7152g + 0.0722b` (insan gözü yeşile en duyarlı) |
 
-**GA ve GP farkı (slayt 3, 39):** Bu çalışma bir **genetik algoritmadır**: evrimleşen şey sabit uzunlukta bir sayı dizisidir (renk genleri). Genetik programlamada ise evrimleşen şey bir programdır, örneğin `if (enemyNear) hide();` gibi bir karar ağacı. İki yöntemin evrim mekanizması aynıdır; farkları neyin evrimleştiğidir.
+**GA ve GP farkı:** Bu çalışma bir **genetik algoritmadır**: evrimleşen şey sabit uzunlukta bir sayı dizisidir (renk genleri). Genetik programlamada ise evrimleşen şey bir programdır, örneğin `if (enemyNear) hide();` gibi bir karar ağacı. İki yöntemin evrim mekanizması aynıdır; farkları neyin evrimleştiğidir.
 
 ## 3. Sahne ve mimari
 
@@ -53,9 +53,9 @@ Assets
 └── Prefabs/Person.prefab         SpriteRenderer + CircleCollider2D + DNA, ölçek 0.4
 ```
 
-Sunudaki "tek sorumluluk" ilkesi (slayt 15) korundu: `DNA` yalnızca bireyin durumunu tutar, tıklamayı ve evrim döngüsünü `PopulationManager` yönetir. Seçilim, çaprazlama ve mutasyon ayrı bir `GeneticAlgorithm` sınıfında; hem canlı sahne hem de toplu deneyler aynı kodu çağırıyor.
+Kod "tek sorumluluk" ilkesine göre ayrıldı: `DNA` yalnızca bireyin durumunu tutar, tıklamayı ve evrim döngüsünü `PopulationManager` yönetir. Seçilim, çaprazlama ve mutasyon ayrı bir `GeneticAlgorithm` sınıfında; hem canlı sahne hem de toplu deneyler aynı kodu çağırıyor.
 
-Sunu yalnızca C# dosyaları içerdiği için sahne ve prefab'ı elle kurmak yerine bir editor scripti yazıldı: Unity menüsünde **Genetik Algoritma → 1. Sahneyi ve Prefab'ı Kur**.
+Sahne ve prefab'ı her seferinde aynı şekilde kurmak için bir editor scripti yazıldı: Unity menüsünde **Genetik Algoritma → 1. Sahneyi ve Prefab'ı Kur**.
 
 ### Unity Editor'dan görüntüler
 
@@ -68,7 +68,7 @@ Sunu yalnızca C# dosyaları içerdiği için sahne ve prefab'ı elle kurmak yer
 | ![Input System](images/editor/05_package_manager_input_system.png) | |
 | *Package Manager: Input System 1.20.0* | |
 
-## 4. Sunudaki etkinlikler
+## 4. Etkinlikler
 
 | Etkinlik | Ne istendi | Nerede |
 |---|---|---|
@@ -97,7 +97,7 @@ Fare konumu piksel cinsindendir, bireyler ise dünya biriminde durur. `ScreenToW
 
 ### Hayatta kalanın fitness'ı (Etkinlik 5)
 
-Sunudaki eski kodda `timeToDie = 0` ile başlanıp yalnızca avlananlar güncelleniyordu. Bu durumda hiç yakalanmayan, yani en iyi birey 0 puan alır ve sıralamada en sona düşer. Düzeltme:
+Eski DNA.cs örneğinde `timeToDie = 0` ile başlanıp yalnızca avlananlar güncelleniyordu. Bu durumda hiç yakalanmayan, yani en iyi birey 0 puan alır ve sıralamada en sona düşer. Düzeltme:
 
 ```csharp
 public void FinishGeneration(float duration)
@@ -131,11 +131,11 @@ public static float InheritOrMutate(float mother, float father, float mutationRa
 
 ## 5. Kontrollü deneyler
 
-Sunudaki uyarıya uyuldu: "tek bir gözlem bilimsel bir sonuca eşdeğer değildir." Her koşul 40 nesil boyunca, **aynı 10 seed** ile ayrı ayrı çalıştırıldı. Aynı seed aynı başlangıç popülasyonunu verdiği için koşullar arasındaki tek fark incelenen ayardır. Ortak ayarlar: N = 10, nesil süresi 10 s, ebeveyn oranı 0.5, otomatik avcı her 1.5 s'de bir birey yakalar (nesil başına 6 av, 4 hayatta kalan).
+Tek bir denemeden sonuç çıkarmamak için her koşul 40 nesil boyunca, **aynı 10 seed** ile ayrı ayrı çalıştırıldı. Aynı seed aynı başlangıç popülasyonunu verdiği için koşullar arasındaki tek fark incelenen ayardır. Ortak ayarlar: N = 10, nesil süresi 10 s, ebeveyn oranı 0.5, otomatik avcı her 1.5 s'de bir birey yakalar (nesil başına 6 av, 4 hayatta kalan).
 
 Deneyler kare kare oynatılmadan, aynı `GeneticAlgorithm` koduyla hesaplandı ([ExperimentRunner.cs](../../Assets/Scripts/Editor/ExperimentRunner.cs)). Ham veri: [data/generations.csv](data/generations.csv), özet: [data/summary.json](data/summary.json).
 
-### 5.1 Avcı kuralı (slayt 35-36)
+### 5.1 Avcı kuralı
 
 ![Avcı kuralı](images/hunter_rules.png)
 
@@ -168,7 +168,7 @@ Parlak avcıda en hızlı düşen kanal yeşil (g). Parlaklık formülünde yeş
 - **Mutasyon 0:** Çaprazlama yeni değer üretmez, yalnızca ilk nesildeki genleri karıştırır. Seed'e göre 5. ile 10. nesil arasında bütün bireyler aynı renge kilitleniyor (çeşitlilik tam 0) ve evrim duruyor. Ulaşılan renk, ilk nesilde şans eseri bulunan en koyu genlerle sınırlı.
 - **Mutasyon 0.02 (ders değeri):** Yavaş ama sürekli iyileşme.
 - **Mutasyon 0.10:** Bu ayarlarda en koyu sonuç. Yeni değerler daha sık denendiği için daha koyu renkler bulunuyor; seçilim de kötü mutasyonları hemen eliyor.
-- **Mutasyon 0.50:** Genlerin yarısı her nesilde rastgele değiştiği için seçilimin kazandırdığı kayboluyor. Sunudaki %50 örneğinin ders demosunu bozmasının sebebi bu.
+- **Mutasyon 0.50:** Genlerin yarısı her nesilde rastgele değiştiği için seçilimin kazandırdığı kayboluyor. Bu kadar yüksek bir oran avcının etkisini görünmez hale getiriyor.
 
 ### 5.3 Challenge: boyut geni
 
@@ -179,15 +179,15 @@ Parlak avcıda en hızlı düşen kanal yeşil (g). Parlaklık formülünde yeş
 | Avcı yalnızca parlaklığa bakar | 0.961 ± 0.291 |
 | Büyük bireyler daha görünür (görünürlük = L × s) | 0.625 ± 0.118 |
 
-Sunudaki soru: "Görünürlük yalnız renge bağlıysa büyüklük geni evrilir mi?" Hayır. Avcı yalnızca renge baktığında boyutun hayatta kalmaya etkisi yok; boyut ortalaması 1.0 çevresinde kalıyor, her seed'de rastgele bir yöne kayıyor (sapma ± 0.29). Görünürlüğe boyut da katıldığında küçük bireyler daha geç yakalanıyor ve popülasyon belirgin biçimde küçülüyor. Bir gen ancak hayatta kalmayı etkiliyorsa yönlü evrilir.
+Avcı yalnızca renge bakıyorsa büyüklük geni evrilir mi? Hayır. Avcı yalnızca renge baktığında boyutun hayatta kalmaya etkisi yok; boyut ortalaması 1.0 çevresinde kalıyor, her seed'de rastgele bir yöne kayıyor (sapma ± 0.29). Görünürlüğe boyut da katıldığında küçük bireyler daha geç yakalanıyor ve popülasyon belirgin biçimde küçülüyor. Bir gen ancak hayatta kalmayı etkiliyorsa yönlü evrilir.
 
-## 6. Ne iddia edemeyiz? (slayt 36)
+## 6. Bu deneyden çıkarılamayacak sonuçlar
 
 - "Mükemmel kamuflaj oluştu" diyemeyiz: avcının algısı yalnızca parlaklık sıralaması; gerçek bir göz modeli, zemin dokusu veya renk kontrastı yok.
 - "Her nesilde mutlaka daha iyi olur" diyemeyiz: parlak avcı deneyinde, nesilden nesle geçişlerin 105/390'ında (%27) ortalama parlaklık bir önceki nesle göre arttı (mutasyon ve küçük popülasyon).
 - Sonuçlar bu ayarlara (N = 10, 6 av/nesil, %50 ebeveyn) bağlı; örneğin en iyi mutasyon oranı başka ayarlarda değişebilir.
 
-## 7. Çıkış bileti (slayt 40)
+## 7. Kısa sorular ve cevapları
 
 1. **RGB vektörü genotip mi fenotip mi?** Genotip. Ekranda görünen renk ise fenotiptir.
 2. **Hiç tıklanmayan bireyin 10 s sonundaki fitness'ı?** 10 (nesil süresinin tamamı).
