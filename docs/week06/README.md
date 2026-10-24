@@ -57,6 +57,17 @@ Sunudaki "tek sorumluluk" ilkesi (slayt 15) korundu: `DNA` yalnızca bireyin dur
 
 Sunu yalnızca C# dosyaları içerdiği için sahne ve prefab'ı elle kurmak yerine bir editor scripti yazıldı: Unity menüsünde **Genetik Algoritma → 1. Sahneyi ve Prefab'ı Kur**.
 
+### Unity Editor'dan görüntüler
+
+| | |
+|---|---|
+| ![Sahne ve ayarlar](images/editor/01_scene_population_manager.png) | ![Person prefab](images/editor/02_person_prefab.png) |
+| *CamouflageScene ve PopulationManager ayarları* | *Person prefab'ı: SpriteRenderer, CircleCollider2D, DNA* |
+| ![1. nesil](images/editor/03_play_generation1.png) | ![Otomatik avcı](images/editor/04_play_auto_hunter_console.png) |
+| *Play modu, 1. nesil: avcı oyuncu* | *Otomatik avcı, 13. nesil: popülasyon koyulaştı, Console'da hata yok* |
+| ![Input System](images/editor/05_package_manager_input_system.png) | |
+| *Package Manager: Input System 1.20.0* | |
+
 ## 4. Sunudaki etkinlikler
 
 | Etkinlik | Ne istendi | Nerede |
