@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Optional command-line switches for a standalone build, used to record the README animation:
 ///   -autoHunter            turn the automatic hunter on
-///   -hunterRule Dullest    BrightestFirst (default) | DullestFirst | Random
+///   -hunterRule DullestFirst   BrightestFirst (default) | DullestFirst | Random (case-insensitive)
 ///   -timeScale 4           run the generations faster
 ///   -recordFrames &lt;dir&gt;   save every n-th frame (screen incl. the on-screen info box) as PNG
 ///   -recordEvery 6  -recordCount 400
@@ -19,9 +19,17 @@ public class DemoRecorder : MonoBehaviour
     {
         string[] args = System.Environment.GetCommandLineArgs();
         if (manager == null) manager = FindAnyObjectByType<PopulationManager>();
+        if (manager == null) { Debug.LogError("DemoRecorder: no PopulationManager in the scene.", this); return; }
 
         if (Has(args, "-autoHunter")) manager.SetAutomaticHunter(true);
-        if (System.Enum.TryParse(Value(args, "-hunterRule"), out HunterRule rule)) manager.Settings.hunterRule = rule;
+        string ruleArg = Value(args, "-hunterRule");
+        if (ruleArg != null)
+        {
+            if (System.Enum.TryParse(ruleArg, true, out HunterRule rule) && System.Enum.IsDefined(typeof(HunterRule), rule))
+                manager.Settings.hunterRule = rule;
+            else
+                Debug.LogError($"DemoRecorder: unknown -hunterRule '{ruleArg}'");
+        }
         if (float.TryParse(Value(args, "-timeScale"), System.Globalization.NumberStyles.Float,
                            System.Globalization.CultureInfo.InvariantCulture, out float scale))
             Time.timeScale = scale;

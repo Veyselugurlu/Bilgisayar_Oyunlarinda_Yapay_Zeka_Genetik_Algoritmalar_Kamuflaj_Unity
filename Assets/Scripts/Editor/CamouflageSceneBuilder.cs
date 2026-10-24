@@ -29,12 +29,16 @@ public static class CamouflageSceneBuilder
     /// <summary>Batch-mode entry point (-executeMethod CamouflageSceneBuilder.BuildBatch).</summary>
     public static void BuildBatch()
     {
-        Build();
-        EditorApplication.Exit(0);
+        int code = 0;
+        try { Build(); }
+        catch (System.Exception e) { Debug.LogException(e); code = 1; }
+        EditorApplication.Exit(code);
     }
 
     [MenuItem("Genetik Algoritma/3. Windows Build Al")]
-    public static void BuildPlayer()
+    public static void BuildPlayer() => TryBuildPlayer();
+
+    private static bool TryBuildPlayer()
     {
         var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
         {
@@ -44,13 +48,15 @@ public static class CamouflageSceneBuilder
             options = BuildOptions.None
         });
         Debug.Log("GA_BUILD_RESULT " + report.summary.result);
+        return report.summary.result == UnityEditor.Build.Reporting.BuildResult.Succeeded;
     }
 
     public static void BuildSceneAndPlayerBatch()
     {
-        Build();
-        BuildPlayer();
-        EditorApplication.Exit(0);
+        int code = 0;
+        try { Build(); if (!TryBuildPlayer()) code = 1; }
+        catch (System.Exception e) { Debug.LogException(e); code = 1; }
+        EditorApplication.Exit(code);
     }
 
     private static Sprite ImportCircleSprite()

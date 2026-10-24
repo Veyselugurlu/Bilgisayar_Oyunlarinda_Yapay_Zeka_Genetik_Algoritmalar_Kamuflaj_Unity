@@ -36,9 +36,9 @@ public class PopulationManager : MonoBehaviour
     private void Start()
     {
         if (sceneCamera == null) sceneCamera = Camera.main;
-        if (personPrefab == null)
+        if (personPrefab == null || sceneCamera == null)
         {
-            Debug.LogError("PopulationManager: assign the Person prefab in the Inspector.", this);
+            Debug.LogError("PopulationManager: assign the Person prefab and the scene camera in the Inspector.", this);
             enabled = false;
             return;
         }
