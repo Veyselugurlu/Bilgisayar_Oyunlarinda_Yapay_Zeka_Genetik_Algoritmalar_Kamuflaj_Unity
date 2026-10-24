@@ -379,7 +379,7 @@ const sonuc = [
 const github = [
   H1("12. GitHub Deposu ve Dosya Yapısı"),
   P([B("Depo: "), link(REPO_URL, REPO_URL)]),
-  P([t("Dersin ilk haftasında tanımlanan akış izlendi. main dalında boş Unity 2D projesi bulunuyor. Bu haftanın işi "), Cd(BRANCH), t(" dalında küçük ve anlamlı commit'lerle geliştirildi ve Pull Request şablonuyla main dalına birleştirilmek üzere hazırlandı. Library, Temp, Logs ve Builds klasörleri ile rapor dosyaları .gitignore ile repo dışında tutuldu.")]),
+  P([t("Dersin ilk haftasında tanımlanan akış izlendi. main dalında boş Unity 2D projesi bulunuyor. Bu haftanın işi "), Cd(BRANCH), t(" dalında küçük ve anlamlı commit'lerle geliştirildi ve Pull Request ile main dalına birleştirilmek üzere hazırlandı. Library, Temp, Logs ve Builds klasörleri ile rapor dosyaları .gitignore ile repo dışında tutuldu.")]),
   ...code([
     "Assets/Scripts/         Genome, DNA, GeneticAlgorithm,",
     "                        PopulationManager, DemoRecorder",
